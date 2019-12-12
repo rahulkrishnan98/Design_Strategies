@@ -1,6 +1,5 @@
 public class lion implements Animal
 {
-    String id = "original";
     public lion()
     {
         System.out.println("Created Lion");
