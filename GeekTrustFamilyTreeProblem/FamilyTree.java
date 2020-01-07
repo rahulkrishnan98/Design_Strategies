@@ -1,8 +1,83 @@
+// Able to create null valued people
 import java.io.*; 
+import java.nio.*;
 import java.util.*; 
+import java.lang.*; 
 
 public class FamilyTree
 {
+    public static Person person;
+    public static Boolean addNewChild(String MotherName, String ChildName, String Gender, Person Root){
+        Boolean added = false;
+        ArrayList<Person> Everyone = Root.getEveryone();
+        for(int i=0;i<Everyone.size();i++){
+            if(Everyone.get(i).Name == MotherName){
+                if(Everyone.get(i).getSpouse() != null){
+                    Person newChild = new Person(ChildName,Gender, Everyone.get(i).getSpouse(), Everyone.get(i));
+                    Everyone.get(i).addChildren(newChild);
+                    added = true;
+                    break;
+                }
+            }
+        }
+        return added;
+    }
+    public static ArrayList<String> getRelation(String Name, String Relation, Person Root){
+        ArrayList<String> relations = new ArrayList<String>();
+        ArrayList<Person> Everyone = Root.getEveryone();
+        for(int i=0;i<Everyone.size();i++){
+            if(Everyone.get(i).Name == Name){
+                person = Everyone.get(i);
+            }
+        }
+		switch (Relation) {
+		case "DAUGHTER":
+			relations = person.Daughter();
+			break;
+
+		case "SON":
+			relations = person.Son();
+			break;
+
+		case "SIBLINGS":
+			relations = person.Siblings();
+			break;
+
+		case "SISTER_IN_LAW":
+			relations = person.Sister_In_Law();
+			break;
+
+		case "BROTHER_IN_LAW":
+			relations = person.Brother_In_Law();
+			break;
+
+		case "MATERNAL_AUNT":
+			if (person.Mother != null)
+				relations = person.Maternal_Aunt();
+			break;
+
+		case "PATERNAL_AUNT":
+			if (person.Father != null)
+				relations = person.Paternal_Aunt();
+			break;
+
+		case "MATERNAL_UNCLE":
+			if (person.Mother != null)
+				relations = person.Maternal_Uncle();
+			break;
+
+		case "PATERNAL_UNCLE":
+			if (person.Father != null)
+				relations = person.Paternal_Uncle();
+			break;
+
+		default:
+			relations.add("DOES NOT EXIST");
+			break;
+        }
+        return relations;
+    }
+
     public static void main(String[] args) {
         // Composition of Root of Lengaburu Family Tree
         Person KingShan = new Person("King Shan", "Male", null, null);
@@ -93,6 +168,12 @@ public class FamilyTree
         Person Krithi = new Person("Krithi", "Female", Vyas, Krpi);
         VyasFamily.addChild(Kriya);
         VyasFamily.addChild(Krithi);
-        
+
+        // Check
+        // CHange switch case names to right format
+        Person Root = KingShan;
+        System.out.println(addNewChild(Chitra.Name, "Aria", "Female",Root));
+        System.out.println(Chitra.getChildren());
+        System.out.println(getRelation(Lavnya.Name, "MATERNAL_AUNT", Root));
     }
 }

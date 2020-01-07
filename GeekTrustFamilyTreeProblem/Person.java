@@ -1,14 +1,27 @@
 import java.util.*;
 public class Person
 {
+    public static ArrayList<Person> Everyone = new ArrayList<Person>();
     String Name;
     String Gender;
     Person Spouse = null;
     ArrayList<Person> Children = new ArrayList<Person>(); 
+    ArrayList<String> Empty = new ArrayList<String>();
     public Person Father;
     public Person Mother;
 
+    public void addChildren(Person person){
+        if(this.Children.contains(person)){
+            System.out.println("Child Already Added");
+        }
+        else{
+            this.Children.add(person);
+        }
+    }
     // Getter-Methods
+    public ArrayList<Person> getEveryone(){
+        return Everyone;
+    }
     public Person getFather(){
         return this.Father;
     }
@@ -22,6 +35,7 @@ public class Person
         return this.Children;
     }
 
+    
     // Setter-Methods
     public void setFather(Person Father){
         this.Father = Father;
@@ -37,6 +51,9 @@ public class Person
     }
     // // Relations
     public ArrayList<String> Paternal_Uncle(){
+        if((this.Father == null) || (this.Father.Mother == null)){
+            return Empty;
+        }
         ArrayList<Person> Fathersibl = this.Father.Mother.getChildren();
         Fathersibl.remove(this.Father);
         ArrayList<String> Temp = new ArrayList<String>();
@@ -48,6 +65,9 @@ public class Person
         return Temp;
     }
     public ArrayList<String> Maternal_Uncle(){
+        if((this.Mother == null)||(this.Mother.Mother == null)){
+            return Empty;
+        }
         ArrayList<Person> Mothersibl = this.Mother.Mother.getChildren();
         Mothersibl.remove(this.Mother);
         ArrayList<String> Temp = new ArrayList<String>();
@@ -59,6 +79,9 @@ public class Person
         return Temp;
     }
     public ArrayList<String> Paternal_Aunt(){
+        if((this.Father == null)||(this.Father.Mother ==null)){
+            return Empty;
+        }
         ArrayList<Person> Fathersibl = this.Father.Mother.getChildren();
         Fathersibl.remove(this.Father);
         ArrayList<String> Temp = new ArrayList<String>();
@@ -70,6 +93,9 @@ public class Person
         return Temp;
     }
     public ArrayList<String> Maternal_Aunt(){
+        if((this.Mother == null)||(this.Mother.Mother == null)){
+            return Empty;
+        }
         ArrayList<Person> Mothersibl = this.Mother.Mother.getChildren();
         Mothersibl.remove(this.Mother);
         ArrayList<String> Temp = new ArrayList<String>();
@@ -81,6 +107,9 @@ public class Person
         return Temp;
     }
     public ArrayList<String> Sister_In_Law(){
+        if((this.Mother == null) || (this.Mother.Children.isEmpty())){
+            return Empty;
+        }
         ArrayList<Person> Orig = this.Mother.Children;
         Orig.remove(this);
         ArrayList<String> Temp = new ArrayList<String>();
@@ -92,6 +121,9 @@ public class Person
         return Temp;
     }
     public ArrayList<String> Brother_In_Law(){
+        if((this.Mother == null)||(this.Mother.Children.isEmpty())){
+            return Empty;
+        }
         ArrayList<Person> Orig = this.Mother.Children;
         Orig.remove(this);
         ArrayList<String> Temp = new ArrayList<String>();
@@ -123,6 +155,9 @@ public class Person
         return Temp;
     }
     public ArrayList<String> Siblings(){
+        if((this.Mother == null)||(this.Mother.Children.isEmpty())){
+            return Empty;
+        }
         ArrayList<Person> Orig = this.Mother.Children;
         ArrayList<String> Temp = new ArrayList<String>();
         if(this.Mother != null){
@@ -130,17 +165,21 @@ public class Person
                 Temp.add(Orig.get(i).Name);
             }
             Temp.remove(this.Name);
-            return Temp;
         }
-        return null;
+        return Temp;
     }
-
+    
+    
     // Constructor
-    public Person(String Name, String Gender, Person Father, Person Mother){
+    public Person(String Name,String Gender, Person Father, Person Mother){
         this.Name = Name;
         this.Gender = Gender;
-        
         setFather(Father);
         setMother(Mother);
+        Everyone.add(this);
+    }
+
+    public String toString(){
+        return this.Name;
     }
 }
