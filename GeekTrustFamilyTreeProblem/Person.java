@@ -58,7 +58,7 @@ public class Person
         Fathersibl.remove(this.Father);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Fathersibl.size();i++){
-            if(Fathersibl.get(i).Gender == "Male"){
+            if(Fathersibl.get(i).Gender.equals("Male")){
                 Temp.add(Fathersibl.get(i).Name);
             }
         }
@@ -72,7 +72,7 @@ public class Person
         Mothersibl.remove(this.Mother);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Mothersibl.size();i++){
-            if(Mothersibl.get(i).Gender == "Male"){
+            if(Mothersibl.get(i).Gender.equals("Male")){
                 Temp.add(Mothersibl.get(i).Name);
             }
         }
@@ -86,7 +86,7 @@ public class Person
         Fathersibl.remove(this.Father);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Fathersibl.size();i++){
-            if(Fathersibl.get(i).Gender == "Female"){
+            if(Fathersibl.get(i).Gender.equals("Female")){
                 Temp.add(Fathersibl.get(i).Name);
             }
         }
@@ -100,7 +100,7 @@ public class Person
         Mothersibl.remove(this.Mother);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Mothersibl.size();i++){
-            if(Mothersibl.get(i).Gender == "Female"){
+            if(Mothersibl.get(i).Gender.equals("Female")){
                 Temp.add(Mothersibl.get(i).Name);
             }
         }
@@ -114,7 +114,7 @@ public class Person
         Orig.remove(this);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Orig.size();i++){
-            if((Orig.get(i).getSpouse()!=null) && (Orig.get(i).Gender == "Male")){
+            if((Orig.get(i).getSpouse()!=null) && (Orig.get(i).Gender.equals("Male"))){
                 Temp.add(Orig.get(i).getSpouse().Name);
             }
         }
@@ -128,7 +128,7 @@ public class Person
         Orig.remove(this);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Orig.size();i++){
-            if((Orig.get(i).getSpouse()!=null) && (Orig.get(i).Gender == "Female")){
+            if((Orig.get(i).getSpouse()!=null) && (Orig.get(i).Gender.equals("Female"))){
                 Temp.add(Orig.get(i).getSpouse().Name);
             }
         }
@@ -138,7 +138,7 @@ public class Person
         ArrayList<Person> Orig = this.Children;
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Orig.size();i++){
-            if(Orig.get(i).Gender == "Male"){
+            if(Orig.get(i).Gender.equals("Male")){
                 Temp.add(Orig.get(i).Name);
             }
         }
@@ -148,7 +148,7 @@ public class Person
         ArrayList<Person> Orig = this.Children;
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Orig.size();i++){
-            if(Orig.get(i).Gender == "Female"){
+            if(Orig.get(i).Gender.equals("Female")){
                 Temp.add(Orig.get(i).Name);
             }
         }
@@ -160,12 +160,10 @@ public class Person
         }
         ArrayList<Person> Orig = this.Mother.Children;
         ArrayList<String> Temp = new ArrayList<String>();
-        if(this.Mother != null){
-            for(int i=0;i<Orig.size();i++){
-                Temp.add(Orig.get(i).Name);
-            }
-            Temp.remove(this.Name);
+        for(int i=0;i<Orig.size();i++){
+            Temp.add(Orig.get(i).Name);
         }
+        Temp.remove(this.Name);
         return Temp;
     }
     

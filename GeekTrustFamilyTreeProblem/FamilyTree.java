@@ -7,15 +7,15 @@ import java.lang.*;
 public class FamilyTree
 {
     public static Person person;
-    public static Boolean addNewChild(String MotherName, String ChildName, String Gender, Person Root){
-        Boolean added = false;
+    public static String addNewChild(String MotherName, String ChildName, String Gender, Person Root){
+        String added = "";
         ArrayList<Person> Everyone = Root.getEveryone();
         for(int i=0;i<Everyone.size();i++){
-            if(Everyone.get(i).Name == MotherName){
+            if(Everyone.get(i).Name.equals(MotherName)){
                 if(Everyone.get(i).getSpouse() != null){
                     Person newChild = new Person(ChildName,Gender, Everyone.get(i).getSpouse(), Everyone.get(i));
                     Everyone.get(i).addChildren(newChild);
-                    added = true;
+                    added = "CHILD_ADDITION_SUCCEEDED";
                     break;
                 }
             }
@@ -26,47 +26,48 @@ public class FamilyTree
         ArrayList<String> relations = new ArrayList<String>();
         ArrayList<Person> Everyone = Root.getEveryone();
         for(int i=0;i<Everyone.size();i++){
-            if(Everyone.get(i).Name == Name){
+            if(Everyone.get(i).Name.equals(Name)){
                 person = Everyone.get(i);
+                break;
             }
         }
 		switch (Relation) {
-		case "DAUGHTER":
+		case "Daughter":
 			relations = person.Daughter();
 			break;
 
-		case "SON":
+		case "Son":
 			relations = person.Son();
 			break;
 
-		case "SIBLINGS":
+		case "Siblings":
 			relations = person.Siblings();
 			break;
 
-		case "SISTER_IN_LAW":
+		case "Sister-In-Law":
 			relations = person.Sister_In_Law();
 			break;
 
-		case "BROTHER_IN_LAW":
+		case "Brother-In-Law":
 			relations = person.Brother_In_Law();
 			break;
 
-		case "MATERNAL_AUNT":
+		case "Maternal-Aunt":
 			if (person.Mother != null)
 				relations = person.Maternal_Aunt();
 			break;
 
-		case "PATERNAL_AUNT":
+		case "Paternal-Aunt ":
 			if (person.Father != null)
 				relations = person.Paternal_Aunt();
 			break;
 
-		case "MATERNAL_UNCLE":
+		case "Maternal-Uncle":
 			if (person.Mother != null)
 				relations = person.Maternal_Uncle();
 			break;
 
-		case "PATERNAL_UNCLE":
+		case "Paternal-Uncle":
 			if (person.Father != null)
 				relations = person.Paternal_Uncle();
 			break;
@@ -76,6 +77,12 @@ public class FamilyTree
 			break;
         }
         return relations;
+    }
+            // File Read
+    public static void FileProcess(Person Root, FamilyTree Family, String filePath) {
+        File file = new File(filePath);
+        FileIO inputFile = new FileIO();
+        inputFile.processFile(file, Root, Family);
     }
 
     public static void main(String[] args) {
@@ -169,11 +176,10 @@ public class FamilyTree
         VyasFamily.addChild(Kriya);
         VyasFamily.addChild(Krithi);
 
-        // Check
-        // CHange switch case names to right format
+        // main
         Person Root = KingShan;
-        System.out.println(addNewChild(Chitra.Name, "Aria", "Female",Root));
-        System.out.println(Chitra.getChildren());
-        System.out.println(getRelation(Lavnya.Name, "MATERNAL_AUNT", Root));
+        FamilyTree Family = new FamilyTree();
+        Family.FileProcess(Root, Family, args[0]);
+        ArrayList<Person> Everyone = Root.getEveryone();
     }
 }
