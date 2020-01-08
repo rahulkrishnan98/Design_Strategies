@@ -49,16 +49,17 @@ public class Person
     public void setChildren(ArrayList<Person> Children){
         this.Children = Children;
     }
-    // // Relations
+    
+    
+    // Relations
     public ArrayList<String> Paternal_Uncle(){
         if((this.Father == null) || (this.Father.Mother == null)){
             return Empty;
         }
         ArrayList<Person> Fathersibl = this.Father.Mother.getChildren();
-        Fathersibl.remove(this.Father);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Fathersibl.size();i++){
-            if(Fathersibl.get(i).Gender.equals("Male")){
+            if((Fathersibl.get(i).Gender.equals("Male")) && !(Fathersibl.get(i).Name.equals(this.Father.Name))){
                 Temp.add(Fathersibl.get(i).Name);
             }
         }
@@ -69,10 +70,9 @@ public class Person
             return Empty;
         }
         ArrayList<Person> Mothersibl = this.Mother.Mother.getChildren();
-        Mothersibl.remove(this.Mother);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Mothersibl.size();i++){
-            if(Mothersibl.get(i).Gender.equals("Male")){
+            if(Mothersibl.get(i).Gender.equals("Male") && !(Mothersibl.get(i).Name.equals(this.Mother.Name))){
                 Temp.add(Mothersibl.get(i).Name);
             }
         }
@@ -83,10 +83,9 @@ public class Person
             return Empty;
         }
         ArrayList<Person> Fathersibl = this.Father.Mother.getChildren();
-        Fathersibl.remove(this.Father);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Fathersibl.size();i++){
-            if(Fathersibl.get(i).Gender.equals("Female")){
+            if(Fathersibl.get(i).Gender.equals("Female") && !(Fathersibl.get(i).Name.equals(this.Father.Name))){
                 Temp.add(Fathersibl.get(i).Name);
             }
         }
@@ -97,39 +96,59 @@ public class Person
             return Empty;
         }
         ArrayList<Person> Mothersibl = this.Mother.Mother.getChildren();
-        Mothersibl.remove(this.Mother);
         ArrayList<String> Temp = new ArrayList<String>();
         for(int i=0;i<Mothersibl.size();i++){
-            if(Mothersibl.get(i).Gender.equals("Female")){
+            if((Mothersibl.get(i).Gender.equals("Female")) && !(Mothersibl.get(i).Name.equals(this.Mother.Name))){
                 Temp.add(Mothersibl.get(i).Name);
             }
         }
         return Temp;
     }
     public ArrayList<String> Sister_In_Law(){
-        if((this.Mother == null) || (this.Mother.Children.isEmpty())){
-            return Empty;
-        }
-        ArrayList<Person> Orig = this.Mother.Children;
-        Orig.remove(this);
+        // Can be either only spouses sisters
+        // Can be only wives of all brothers
+        // Can be both
         ArrayList<String> Temp = new ArrayList<String>();
-        for(int i=0;i<Orig.size();i++){
-            if((Orig.get(i).getSpouse()!=null) && (Orig.get(i).Gender.equals("Male"))){
-                Temp.add(Orig.get(i).getSpouse().Name);
+        if(this.getSpouse() != null){
+            // A list without the Spouse
+            ArrayList<Person> SpouseSibl = this.getSpouse().SiblingsPersonObj();
+            for(int i=0;i<SpouseSibl.size();i++){
+                if(SpouseSibl.get(i).Gender.equals("Female")){
+                    Temp.add(SpouseSibl.get(i).Name);
+                }
+            }
+        }
+        if(this.Mother != null){
+            ArrayList<Person> sibl = this.SiblingsPersonObj();
+            for(int i=0;i<sibl.size();i++){
+                if((sibl.get(i).getSpouse() != null) && (sibl.get(i).Gender.equals("Male"))){
+                    Temp.add(sibl.get(i).getSpouse().Name);
+                }
             }
         }
         return Temp;
+
     }
     public ArrayList<String> Brother_In_Law(){
-        if((this.Mother == null)||(this.Mother.Children.isEmpty())){
-            return Empty;
-        }
-        ArrayList<Person> Orig = this.Mother.Children;
-        Orig.remove(this);
+        // Can be only spouses brothers
+        // Can be only husbands of all sisters
+        // Can be both
         ArrayList<String> Temp = new ArrayList<String>();
-        for(int i=0;i<Orig.size();i++){
-            if((Orig.get(i).getSpouse()!=null) && (Orig.get(i).Gender.equals("Female"))){
-                Temp.add(Orig.get(i).getSpouse().Name);
+        if(this.getSpouse() != null){
+            // A list without the Spouse
+            ArrayList<Person> SpouseSibl = this.getSpouse().SiblingsPersonObj();
+            for(int i=0;i<SpouseSibl.size();i++){
+                if(SpouseSibl.get(i).Gender.equals("Male")){
+                    Temp.add(SpouseSibl.get(i).Name);
+                }
+            }
+        }
+        if(this.Mother != null){
+            ArrayList<Person> sibl = this.SiblingsPersonObj();
+            for(int i=0;i<sibl.size();i++){
+                if((sibl.get(i).getSpouse() != null) && (sibl.get(i).Gender.equals("Female"))){
+                    Temp.add(sibl.get(i).getSpouse().Name);
+                }
             }
         }
         return Temp;
@@ -166,7 +185,20 @@ public class Person
         Temp.remove(this.Name);
         return Temp;
     }
-    
+    // Misc- Useful helper classes
+    public ArrayList<Person> SiblingsPersonObj(){
+        ArrayList<Person> empty = new ArrayList<Person>();
+        if((this.Mother == null)||(this.Mother.Children.isEmpty())){
+            return empty;
+        }
+        ArrayList<Person> Orig = this.Mother.Children;
+        ArrayList<Person> Temp = new ArrayList<Person>();
+        for(int i=0;i<Orig.size();i++){
+            Temp.add(Orig.get(i));
+        }
+        Temp.remove(this);
+        return Temp;
+    }
     
     // Constructor
     public Person(String Name,String Gender, Person Father, Person Mother){

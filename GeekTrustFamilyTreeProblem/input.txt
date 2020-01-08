@@ -1,2 +1,1 @@
-ADD_CHILD Chitra Aria Female
-GET_RELATIONSHIP Aria Siblings 
+GET_RELATIONSHIP Ish Sister-In-Law

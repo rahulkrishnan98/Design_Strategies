@@ -8,10 +8,10 @@ public class FamilyTree
 {
     public static Person person;
     public static String addNewChild(String MotherName, String ChildName, String Gender, Person Root){
-        String added = "";
+        String added = "CHILD_ADDITION_FAILED";
         ArrayList<Person> Everyone = Root.getEveryone();
         for(int i=0;i<Everyone.size();i++){
-            if(Everyone.get(i).Name.equals(MotherName)){
+            if((Everyone.get(i).Name.equals(MotherName)) && (Everyone.get(i).Gender.equals("Female"))){
                 if(Everyone.get(i).getSpouse() != null){
                     Person newChild = new Person(ChildName,Gender, Everyone.get(i).getSpouse(), Everyone.get(i));
                     Everyone.get(i).addChildren(newChild);
@@ -48,7 +48,7 @@ public class FamilyTree
 			relations = person.Sister_In_Law();
 			break;
 
-		case "Brother-In-Law":
+        case "Brother-In-Law":
 			relations = person.Brother_In_Law();
 			break;
 
@@ -87,8 +87,8 @@ public class FamilyTree
 
     public static void main(String[] args) {
         // Composition of Root of Lengaburu Family Tree
-        Person KingShan = new Person("King Shan", "Male", null, null);
-        Person QueenAnga = new Person("Queen Anga", "Female", null, null);
+        Person KingShan = new Person("KingShan", "Male", null, null);
+        Person QueenAnga = new Person("QueenAnga", "Female", null, null);
 
         Couple RootCouple = new Couple(KingShan, QueenAnga);
 
@@ -169,7 +169,7 @@ public class FamilyTree
         AritFamily.addChild(Lavnya);
 
         Person Vasa = new Person("Vasa", "Male", Asva, Satvy);
-        AritFamily.addChild(Vasa);
+        AsvaFamily.addChild(Vasa);
 
         Person Kriya = new Person("Kriya", "Male", Vyas, Krpi);
         Person Krithi = new Person("Krithi", "Female", Vyas, Krpi);
@@ -180,6 +180,6 @@ public class FamilyTree
         Person Root = KingShan;
         FamilyTree Family = new FamilyTree();
         Family.FileProcess(Root, Family, args[0]);
-        ArrayList<Person> Everyone = Root.getEveryone();
+
     }
 }
