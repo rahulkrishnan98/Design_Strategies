@@ -1,6 +1,7 @@
 from person import Person
 from family import Family
 import custom_exceptions
+import constants
 import argparse
 
 if __name__ == "__main__":
@@ -8,43 +9,43 @@ if __name__ == "__main__":
     parser.add_argument("input_file", type=str)
     args = parser.parse_args()
 
-    King_Shan = Person("King Shan","M")
+    King_Shan = Person("King Shan",constants.MALE)
     family = Family(King_Shan)
     
     #Creation of the Universe
-    Queen_Anga = Person("Queen Anga","F")
+    Queen_Anga = Person("Queen Anga",constants.FEMALE)
 
-    Chit = Person("Chit", "M")
-    Amba = Person("Amba", "F")
-    Ish = Person("Ish", "M")
-    Vich = Person("Vich", "M")
-    Lika = Person("Lika","F")
-    Aras = Person("Aras","M")
-    Chitra = Person("Chitra","F")
-    Satya = Person("Satya", "F")
-    Vyan = Person("Vyan", "M")
+    Chit = Person("Chit", constants.MALE)
+    Amba = Person("Amba", constants.FEMALE)
+    Ish = Person("Ish", constants.MALE)
+    Vich = Person("Vich", constants.MALE)
+    Lika = Person("Lika",constants.FEMALE)
+    Aras = Person("Aras",constants.MALE)
+    Chitra = Person("Chitra",constants.FEMALE)
+    Satya = Person("Satya", constants.FEMALE)
+    Vyan = Person("Vyan", constants.MALE)
 
-    Dritha = Person("Dritha","F")
-    Jaya = Person("Jaya","M")
-    Tritha = Person("Tritha","F")
-    Vritha = Person("Vritha","M")
-    Vila = Person("Vila","F")
-    Chika = Person("Chika","F")
-    Arit = Person("Arit","M")
-    Jnki = Person("Jnki","F")
-    Ahit = Person("Ahit","M")
-    Satvy = Person("Satvy","F")
-    Asva = Person("Asva","M")
-    Krpi = Person("Krpi", "F")
-    Vyas = Person("Vyas", "M")
-    Atya = Person("Atya","F")
+    Dritha = Person("Dritha",constants.FEMALE)
+    Jaya = Person("Jaya",constants.MALE)
+    Tritha = Person("Tritha",constants.FEMALE)
+    Vritha = Person("Vritha",constants.MALE)
+    Vila = Person("Vila",constants.FEMALE)
+    Chika = Person("Chika",constants.FEMALE)
+    Arit = Person("Arit",constants.MALE)
+    Jnki = Person("Jnki",constants.FEMALE)
+    Ahit = Person("Ahit",constants.MALE)
+    Satvy = Person("Satvy",constants.FEMALE)
+    Asva = Person("Asva",constants.MALE)
+    Krpi = Person("Krpi", constants.FEMALE)
+    Vyas = Person("Vyas", constants.MALE)
+    Atya = Person("Atya",constants.FEMALE)
 
-    Yodhan = Person("Yodhan", "M")
-    Laki = Person("Laki", "M")
-    Lavnya = Person("Lavnya", "F")
-    Vasa = Person("Vasa", "M")
-    Kriya = Person("Kriya", "M")
-    Krithi = Person("Krithi", "F")
+    Yodhan = Person("Yodhan", constants.MALE)
+    Laki = Person("Laki", constants.MALE)
+    Lavnya = Person("Lavnya", constants.FEMALE)
+    Vasa = Person("Vasa", constants.MALE)
+    Kriya = Person("Kriya", constants.MALE)
+    Krithi = Person("Krithi", constants.FEMALE)
 
     #Relating the population
     family.add_spouse_in_family(King_Shan, Queen_Anga)
@@ -87,37 +88,37 @@ if __name__ == "__main__":
     family.add_child_in_family(Krpi, Krithi)
 
     #Queries
-    input_file = open(args.input_file, "r")
-    for line in input_file:
+    with open(args.input_file, 'r') as file:
+        lines = file.readlines()
+    for line in lines:
+        line = line.rstrip('\n')
         query = line.split(" ")
-        query[-1] = query[-1][:-1]
-
         if(query[0] == 'GET_RELATIONSHIP'):
             try:
                 member = family.search_member(query[1])
                 result = family.get_relationship(member, query[2])
             except (custom_exceptions.NullPointer):
-                print("NONE")
+                print(constants.NULLPOINTER_ERROR)
             except (custom_exceptions.CommandNotFound):
-                print("INVALID COMMAND")
+                print(constants.COMMAND_ERROR)
             except (custom_exceptions.PersonNotFound):
-                print("PERSON NOT FOUND")
+                print(constants.PERSON_ERROR)
             except (custom_exceptions.InadequateInformation):
-                print("INADEQUATE INFORMATION")
+                print(constants.INFORMATION_ERROR)
             else:
                 print(" ".join(result))
         elif(query[0] == "ADD_CHILD"):
             if(query[3] == "Female"):
-                gender = "F"
+                gender = constants.FEMALE
             else:
-                gender = "M"
+                gender = constants.MALE
             try:
                 new_child = Person(query[2], gender)
                 mother = family.search_member(query[1])
                 family.add_child_in_family(mother, new_child)
             except (custom_exceptions.PersonNotFound):
-                print("PERSON NOT FOUND")
+                print(constants.PERSON_ERROR)
             except (custom_exceptions.ChildAdditionFailed):
-                print("CHILD ADDITION FAILED")
+                print(constants.CHILD_ERROR)
             else:
-                print("CHILD ADDITION SUCCEEDED")
+                print(constants.CHILD_ADDITION_SUCCESS)

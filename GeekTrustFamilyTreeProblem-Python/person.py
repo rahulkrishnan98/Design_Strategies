@@ -1,4 +1,5 @@
 import custom_exceptions
+import constants
 class Person:
     def __init__(self, name, gender, father=None, mother=None, spouse=None):
         self.name, self.gender, self.father, self.mother, self.spouse = name, gender, father, mother, spouse
@@ -6,111 +7,101 @@ class Person:
     def add_spouse(self, spouse):
         self.spouse = spouse
     def add_children(self, child):
-        self.daughters.append(child) if child.gender == 'F' else self.sons.append(child)
+        self.daughters.append(child) if child.gender == constants.FEMALE else self.sons.append(child)
     '''
     family relations
     '''
-    @staticmethod
-    def get_spouse(person):
-        return person.spouse
+    def get_spouse(self):
+        return self.spouse
 
-    @staticmethod
-    def get_brother(person):
-        if(person.mother is None):
-            raise custom_exceptions.InadequateInformation("Inadequate Information")
+    def get_brother(self):
+        if(self.mother is None):
+            raise custom_exceptions.InadequateInformation(constants.INFORMATION_ERROR)
         else:
             result = []
-            mother = person.mother
+            mother = self.mother
             sons = mother.sons
             for son in sons:
-                if(person.name == son.name):
+                if(self.name == son.name):
                     continue
                 else:
                     result.append(son)
             return result
 
-    @staticmethod
-    def get_sister(person):
-        if(person.mother is None):
-            raise custom_exceptions.InadequateInformation("Inadequate Information")
+    def get_sister(self):
+        if(self.mother is None):
+            raise custom_exceptions.InadequateInformation(constants.INFORMATION_ERROR)
         else:
             result = []
-            mother = person.mother
+            mother = self.mother
             daughters = mother.daughters
             for daughter in daughters:
-                if(person.name == daughter.name):
+                if(self.name == daughter.name):
                     continue
                 else:
                     result.append(daughter)
             return result
 
-    @staticmethod
-    def get_children(person):
-        return person.daughters + person.sons
+    def get_children(self):
+        return self.daughters + self.sons
     
-    @staticmethod
-    def get_paternal_aunt(person):
-        if(person.father is None):
-            raise custom_exceptions.NullPointer("NONE")
+    def get_paternal_aunt(self):
+        if(self.father is None):
+            raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         else:
-            father = person.father
+            father = self.father
             return Person.get_sister(father)
             
-    @staticmethod
-    def get_paternal_uncle(person):
-        if person.father is None:
-            raise custom_exceptions.NullPointer("NONE")
+    def get_paternal_uncle(self):
+        if self.father is None:
+            raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         else:
-            father = person.father
+            father = self.father
             return Person.get_brother(father)
     
-    @staticmethod
-    def get_maternal_aunt(person):
-        if person.mother is None:
-            raise custom_exceptions.NullPointer("NONE")
+    def get_maternal_aunt(self):
+        if self.mother is None:
+            raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         else:
-            mother = person.mother
+            mother = self.mother
             return Person.get_sister(mother)
 
-    @staticmethod
-    def get_maternal_uncle(person):
-        if person.mother is None:
-            raise custom_exceptions.NullPointer("NONE")
+    def get_maternal_uncle(self):
+        if self.mother is None:
+            raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         else:
-            mother = person.mother
+            mother = self.mother
             return Person.get_brother(mother)
     
-    @staticmethod
-    def get_sister_in_law(person):
+    def get_sister_in_law(self):
         result = []
         try:
-            brothers = Person.get_brother(person)
+            brothers = Person.get_brother(self)
         except custom_exceptions.InadequateInformation:
             brothers = None
         else:
             result.extend([brother.spouse for brother in brothers if brother.spouse is not None])
-        if(person.spouse is not None):
+        if(self.spouse is not None):
             try:
-                spouse_sisters = Person.get_sister(person.spouse)
+                spouse_sisters = Person.get_sister(self.spouse)
             except custom_exceptions.InadequateInformation:
                 spouse_sisters = None 
             else:
                 result.extend(spouse_sisters)
         return result
         
-    @staticmethod
-    def get_brother_in_law(person):
+    def get_brother_in_law(self):
         result = []
         try:
-            sisters = Person.get_sister(person)
+            sisters = Person.get_sister(self)
         except custom_exceptions.InadequateInformation:
             sisters = None
         else:
             result.extend([sister.spouse for sister in sisters if sister.spouse is not None])
 
-        if(person.spouse is not None):
+        if(self.spouse is not None):
             try:
-                spouse_brothers = Person.get_brother(person.spouse)
+                spouse_brothers = Person.get_brother(self.spouse)
             except custom_exceptions.InadequateInformation:
                 spouse_brothers = None 
             else:
