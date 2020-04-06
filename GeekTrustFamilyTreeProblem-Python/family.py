@@ -23,14 +23,8 @@ class Family:
 
     def add_child_in_family(self, mother, child):
         mother = Family.search_member(self, mother.name)
-        if(mother.get_spouse() is None or mother.gender == constants.MALE):
-            raise custom_exceptions.ChildAdditionFailed(constants.CHILD_ERROR)
-        else:
-            mother.add_children(child)
-            mother.spouse.add_children(child)
-            child.mother = mother
-            child.father = mother.spouse
-            self.family_members.append(child)
+        mother.add_children(child)
+        self.family_members.append(child)
     
    
     def add_spouse_in_family(self, member, spouse):
@@ -41,86 +35,34 @@ class Family:
 
     
     def get_relationship(self, member, relation):
+        person = Family.search_member(self, member.name)
+
         if(relation == constants.SIBLINGS):
-            result = Family.siblings(self, member)
+            result = Family.in_order(self,[sibling.name for sibling in person.get_brother()+ person.get_sister()])
         elif(relation == constants.PATERNAL_UNCLE):
-            result = Family.uncle(self, member, constants.PATERNAL)
+            result = Family.in_order(self, [per.name for per in person.get_paternal_uncle()])
         elif(relation == constants.PATERNAL_AUNT):
-            result = Family.aunt(self, member, constants.PATERNAL)
+            result = Family.in_order(self, [per.name for per in person.get_paternal_aunt()])
         elif(relation == constants.MATERNAL_UNCLE):
-            result = Family.uncle(self, member, constants.MATERNAL)
+            result = Family.in_order(self, [per.name for per in person.get_maternal_uncle()])
         elif(relation == constants.MATERNAL_AUNT):
-            result = Family.aunt(self, member, constants.MATERNAL)
+            result = Family.in_order(self, [per.name for per in person.get_maternal_aunt()])
         elif(relation == constants.COMMAND_SON):
-            result = Family.children(self, member, constants.SON)
+            result = Family.in_order(self, [per.name for per in person.sons])
         elif(relation == constants.COMMAND_DAUGHTER):
-            result = Family.children(self, member, constants.DAUGHTER)
+            result = Family.in_order(self, [per.name for per in person.daughters])
         elif(relation == constants.SISTER_IN_LAW):
-            result = Family.in_laws(self, member, constants.SISTER)
+            result = Family.in_order(self, [inlaw.name for inlaw in person.get_sister_in_law()])
         elif(relation == constants.BROTHER_IN_LAW):
-            result = Family.in_laws(self, member, constants.BROTHER)
+            result = Family.in_order(self, [inlaw.name for inlaw in person.get_brother_in_law()])
         else:
             raise custom_exceptions.CommandNotFound(constants.COMMAND_ERROR)
+        if(len(result) == 0):
+            raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         return result
 
-    '''
-    All relations
-    '''
-    def children(self, name, gender):
-        person = Family.search_member(self, name.name)
-        if(gender == constants.DAUGHTER):
-            result = [per.name for per in person.daughters]
-            if(result == []):
-                raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
-        else:
-            result = [per.name for per in person.sons]
-            if(result == []):
-                raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
-        return Family.in_order(self, result)
 
-    def uncle(self, name, side):
-        person = Family.search_member(self, name.name)
-        if(side ==constants.PATERNAL):
-            result = [per.name for per in person.get_paternal_uncle()]
-            if(result == []):
-                raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
-        else:
-            result = [per.name for per in person.get_maternal_uncle()]
-            if(result == []):
-                raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
-        return Family.in_order(self, result)
 
-    def aunt(self, name, side):
-        person = Family.search_member(self, name.name)
-        if(side ==constants.PATERNAL):
-            result = [per.name for per in person.get_paternal_aunt()]
-            if(result == []):
-                raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
-        else:
-            result = [per.name for per in person.get_maternal_aunt()]
-            if(result == []):
-                raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
-        return Family.in_order(self, result)
-
-    def siblings(self, name):
-        person = Family.search_member(self, name.name)
-        result = [sibling.name for sibling in person.get_brother()+ person.get_sister()]
-        if(result == []):
-            raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
-        return Family.in_order(self, result)
-
-    def in_laws(self, name, side):
-        person = Family.search_member(self, name.name)
-        if(side == constants.SISTER):
-            result = [inlaw.name for inlaw in person.get_sister_in_law()]
-        else:
-            result = [inlaw.name for inlaw in person.get_brother_in_law()]
-        return Family.in_order(self,result)
-            
-
-    '''
-    Misc Functions
-    '''
     def in_order(self, arr):
         result = []
         arr = [Family.search_member(self, arr[i]) for i in range(len(arr))]

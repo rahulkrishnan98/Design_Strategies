@@ -21,11 +21,7 @@ class TestFamily(unittest.TestCase):
             self.family.add_child_in_family(self.King_root, self.person_1)
     def test_get_relationship(self):
         with self.assertRaises(custom_exceptions.CommandNotFound):
-            self.family.get_relationship("person1","unknown_relation")
-    def test_null_values(self):
-        with self.assertRaises(custom_exceptions.NullPointer):
-            self.family.children(self.King_root, "male")
-        with self.assertRaises(custom_exceptions.NullPointer):
-            self.family.children(self.King_root, "female")
+            self.family.get_relationship(self.King_root,"unknown_relation")
+
 if __name__=="__main__":
     unittest.main()

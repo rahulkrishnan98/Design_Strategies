@@ -7,7 +7,13 @@ class Person:
     def add_spouse(self, spouse):
         self.spouse = spouse
     def add_children(self, child):
-        self.daughters.append(child) if child.gender == constants.FEMALE else self.sons.append(child)
+        if(self.spouse is None or self.gender == constants.MALE):
+            raise custom_exceptions.ChildAdditionFailed(constants.CHILD_ERROR)
+        else:
+            self.daughters.append(child) if child.gender == constants.FEMALE else self.sons.append(child)
+            self.spouse.daughters.append(child) if child.gender == constants.FEMALE else self.spouse.sons.append(child)
+            child.mother = self
+            child.father = self.spouse
     '''
     family relations
     '''

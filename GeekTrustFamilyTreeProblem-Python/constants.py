@@ -11,14 +11,6 @@ CHILD_ADDITION_SUCCESS = "CHILD_ADDITION_SUCCEEDED"
 MALE = "M"
 FEMALE = "F"
 
-#Relations
-PATERNAL = "paternal"
-MATERNAL = "maternal"
-DAUGHTER = "daughter"
-SON = "son"
-SISTER = "sister"
-BROTHER = "brother"
-
 #Commands
 SIBLINGS = "Siblings"
 PATERNAL_UNCLE = "Paternal-Uncle"
