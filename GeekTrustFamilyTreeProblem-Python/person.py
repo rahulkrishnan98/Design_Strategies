@@ -56,40 +56,40 @@ class Person:
             raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         else:
             father = self.father
-            return Person.get_sister(father)
+            return father.get_sister()
             
     def get_paternal_uncle(self):
         if self.father is None:
             raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         else:
             father = self.father
-            return Person.get_brother(father)
+            return father.get_brother()
     
     def get_maternal_aunt(self):
         if self.mother is None:
             raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         else:
             mother = self.mother
-            return Person.get_sister(mother)
+            return mother.get_sister()
 
     def get_maternal_uncle(self):
         if self.mother is None:
             raise custom_exceptions.NullPointer(constants.NULLPOINTER_ERROR)
         else:
             mother = self.mother
-            return Person.get_brother(mother)
+            return mother.get_brother()
     
     def get_sister_in_law(self):
         result = []
         try:
-            brothers = Person.get_brother(self)
+            brothers = self.get_brother()
         except custom_exceptions.InadequateInformation:
             brothers = None
         else:
             result.extend([brother.spouse for brother in brothers if brother.spouse is not None])
         if(self.spouse is not None):
             try:
-                spouse_sisters = Person.get_sister(self.spouse)
+                spouse_sisters = self.spouse.get_sister()
             except custom_exceptions.InadequateInformation:
                 spouse_sisters = None 
             else:
@@ -99,7 +99,7 @@ class Person:
     def get_brother_in_law(self):
         result = []
         try:
-            sisters = Person.get_sister(self)
+            sisters = self.get_sister()
         except custom_exceptions.InadequateInformation:
             sisters = None
         else:
@@ -107,7 +107,7 @@ class Person:
 
         if(self.spouse is not None):
             try:
-                spouse_brothers = Person.get_brother(self.spouse)
+                spouse_brothers = self.spouse.get_brother()
             except custom_exceptions.InadequateInformation:
                 spouse_brothers = None 
             else:
