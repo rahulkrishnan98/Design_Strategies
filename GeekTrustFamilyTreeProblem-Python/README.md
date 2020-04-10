@@ -12,7 +12,7 @@ You can also run tests:
   - Test Family - Unit Testing
   - Test Person - Unit Testing
 
-#### Building for source
+#### Building from source
 For requirements install:
 ```sh
 $ pip install -r requirements.txt
